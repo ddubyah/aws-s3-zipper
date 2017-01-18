@@ -7,8 +7,6 @@ var s3 = require('s3');
 
 function S3Zipper(awsConfig) {
     assert.ok(awsConfig, 'AWS S3 options must be defined.');
-    // assert.notEqual(awsConfig.accessKeyId, undefined, 'Requires S3 AWS Key.');
-    // assert.notEqual(awsConfig.secretAccessKey, undefined, 'Requires S3 AWS Secret.');
     assert.notEqual(awsConfig.region, undefined, 'Requires AWS S3 region.');
     assert.notEqual(awsConfig.bucket, undefined, 'Requires AWS S3 bucket.');
     this.init(awsConfig);
@@ -30,7 +28,7 @@ S3Zipper.prototype = {
 				if(awsConfig.secretAccessKey) configOptions.accessKey = awsConfig.secretAccessKey;
 
         AWS.config.update(configOptions);
-				
+
         this.s3bucket = new AWS.S3({
             params: {
                 Bucket: this.awsConfig.bucket
