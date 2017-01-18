@@ -34,12 +34,15 @@ var config ={
 var zipper = new S3Zipper(config);
 ```
 
+**N.B.** The `accessKeyId` and `secretAccessKey` parameters are optional. If not provided the AWS credentials may be drawn from a [shared credentials file](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-shared.html) or the IAM role of the current runtime context, for example if running a script in an AWS EC2 or Lambda environment. 
+
+
 ###Filter out Files
 ```
 zipper.filterOutFiles= function(file){
     if(file.Key.indexOf('.tmp') >= 0) // filter out temp files
         return null;
-    else 
+    else
       return file;
 };
 ```
@@ -200,7 +203,7 @@ Zip files in an s3 folder and place the zip file back on s3
   * `results`: the array of results
 
 ### `zipToFile: function (params ,callback)`
-Zip files to a local zip file. 
+Zip files to a local zip file.
 * `params` object
     * `s3FolderName`: the name of the bucket folder you want to stream
     * `startKey`: optional. start zipping after this file key
