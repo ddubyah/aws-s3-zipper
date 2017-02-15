@@ -4,6 +4,13 @@ var async = require('async');
 var AWS = require('aws-sdk');
 var fs = require('fs');
 var s3 = require('s3');
+var extend = require('util')._extend;
+var path = require("path");
+
+var configDefaults = {
+	tempDir: "" // Where do we store local temp files?
+};
+
 
 function S3Zipper(awsConfig) {
     assert.ok(awsConfig, 'AWS S3 options must be defined.');
@@ -20,7 +27,7 @@ function listObjectInner() {
 
 S3Zipper.prototype = {
     init: function (awsConfig) {
-        this.awsConfig = awsConfig;
+        this.awsConfig = extend(configDefaults, awsConfig);
 				var configOptions = {
 					region: awsConfig.region
 				};
@@ -271,7 +278,8 @@ S3Zipper.prototype = {
         }
 
         var t = this;
-        params.zipFileName = '__' + Date.now() + '.zip';
+        params.zipFileName = path.resolve( this.awsConfig.tempDir, '__' + Date.now() + '.zip');
+				console.log("temp file here: ", params.zipFileName);
 
         if (params.s3ZipFileName.indexOf('/') < 0)
             params.s3ZipFileName = params.s3FolderName + "/" + params.s3ZipFileName;
@@ -392,9 +400,10 @@ S3Zipper.prototype = {
                 , zipFileName:arguments[2]
                 , recursive: false
             };
+
             callback= arguments[3];
         }
-
+				// throw "link test!!";
         var filestream = fs.createWriteStream(params.zipFileName);
         this.streamZipDataTo({
             pipe: filestream
